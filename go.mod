@@ -7,6 +7,7 @@ require (
 	github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20221215162035-5330a85ea652
 	github.com/Microsoft/go-winio v0.6.0
 	github.com/Microsoft/hcsshim v0.10.0-rc.4
+	github.com/checkpoint-restore/checkpointctl v0.0.0-20221220135617-5b24f461ba2f
 	github.com/container-orchestrated-devices/container-device-interface v0.5.1
 	github.com/containerd/aufs v1.0.0
 	github.com/containerd/btrfs v1.0.0
@@ -37,7 +38,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/imdario/mergo v0.3.12
 	github.com/intel/goresctrl v0.3.0
-	github.com/klauspost/compress v1.15.11
+	github.com/klauspost/compress v1.15.12
 	github.com/minio/sha256-simd v1.0.0
 	github.com/moby/locker v1.0.1
 	github.com/moby/sys/mountinfo v0.6.2
