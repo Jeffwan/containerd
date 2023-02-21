@@ -18,6 +18,7 @@ package containers
 
 import (
 	"errors"
+	"github.com/sirupsen/logrus"
 
 	"github.com/containerd/containerd"
 	"github.com/containerd/containerd/cio"
@@ -77,6 +78,7 @@ var restoreCommand = cli.Command{
 			opts = append(opts, containerd.WithRestoreRW)
 		}
 
+		logrus.Infoln("call restore method from commands line")
 		ctr, err := client.Restore(ctx, id, checkpoint, opts...)
 		if err != nil {
 			return err
@@ -87,6 +89,8 @@ var restoreCommand = cli.Command{
 			topts = append(topts, containerd.WithTaskCheckpoint(checkpoint))
 		}
 
+		// new tasks opts'd difference between checkpoint?
+		logrus.Infoln("call new task method from commands line, checkpoint %v", checkpoint)
 		task, err := ctr.NewTask(ctx, cio.NewCreator(cio.WithStdio), topts...)
 		if err != nil {
 			return err

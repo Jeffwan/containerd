@@ -21,6 +21,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"runtime"
 
 	tasks "github.com/containerd/containerd/api/services/tasks/v1"
@@ -67,6 +68,8 @@ func WithCheckpointTask(ctx context.Context, client *Client, c *containers.Conta
 	if err != nil {
 		return err
 	}
+	logrus.Infof("task: %v opt: %v", task, any)
+	// very likely it's empty
 	for _, d := range task.Descriptors {
 		platformSpec := platforms.DefaultSpec()
 		index.Manifests = append(index.Manifests, imagespec.Descriptor{
@@ -97,6 +100,7 @@ func WithCheckpointTask(ctx context.Context, client *Client, c *containers.Conta
 
 // WithCheckpointRuntime includes the container runtime info
 func WithCheckpointRuntime(ctx context.Context, client *Client, c *containers.Container, index *imagespec.Index, copts *options.CheckpointOptions) error {
+	logrus.Infoln("come into checkpoint runtime")
 	if c.Runtime.Options != nil {
 		data, err := c.Runtime.Options.Marshal()
 		if err != nil {

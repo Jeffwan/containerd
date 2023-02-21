@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"strings"
@@ -292,6 +293,7 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 		id:     c.id,
 		c:      c,
 	}
+	logrus.Infof("info.checkpoint: %v", info.Checkpoint)
 	if info.Checkpoint != nil {
 		request.Checkpoint = info.Checkpoint
 	}

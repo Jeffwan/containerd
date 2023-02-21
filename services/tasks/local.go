@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"path/filepath"
@@ -163,6 +164,9 @@ func (l *local) Create(ctx context.Context, r *api.CreateTaskRequest, _ ...grpc.
 		return nil, err
 	}
 	// jump get checkpointPath from checkpoint image
+	// here it's empty.
+	logrus.Infof("container.Runtime.name: %v, options %v\n", container.Runtime.Name, r.Options)
+	logrus.Infof("checkpointPath: %v, checkpoint %v\n", checkpointPath, r.Checkpoint)
 	if checkpointPath == "" && r.Checkpoint != nil {
 		checkpointPath, err = os.MkdirTemp(os.Getenv("XDG_RUNTIME_DIR"), "ctrd-checkpoint")
 		if err != nil {
@@ -536,6 +540,7 @@ func (l *local) CloseIO(ctx context.Context, r *api.CloseIORequest, _ ...grpc.Ca
 }
 
 func (l *local) Checkpoint(ctx context.Context, r *api.CheckpointTaskRequest, _ ...grpc.CallOption) (*api.CheckpointTaskResponse, error) {
+	logrus.Infoln("come 0")
 	container, err := l.getContainer(ctx, r.ContainerID)
 	if err != nil {
 		return nil, err
@@ -548,6 +553,7 @@ func (l *local) Checkpoint(ctx context.Context, r *api.CheckpointTaskRequest, _ 
 	if err != nil {
 		return nil, err
 	}
+	logrus.Infoln("come 1")
 	checkpointImageExists := false
 	if image == "" {
 		checkpointImageExists = true
@@ -562,12 +568,15 @@ func (l *local) Checkpoint(ctx context.Context, r *api.CheckpointTaskRequest, _ 
 	}
 	// do not commit checkpoint image if checkpoint ImagePath is passed,
 	// return if checkpointImageExists is false
+	logrus.Infof("come 2: %v \n", checkpointImageExists)
 	if !checkpointImageExists {
 		return &api.CheckpointTaskResponse{}, nil
 	}
 	// write checkpoint to the content store
 	tar := archive.Diff(ctx, "", image)
 	cp, err := l.writeContent(ctx, images.MediaTypeContainerd1Checkpoint, image, tar)
+	logrus.Infoln("come 2.1")
+	logrus.Infof("cp %v, err: %v", cp, err)
 	// close tar first after write
 	if err := tar.Close(); err != nil {
 		return nil, err
@@ -575,16 +584,25 @@ func (l *local) Checkpoint(ctx context.Context, r *api.CheckpointTaskRequest, _ 
 	if err != nil {
 		return nil, err
 	}
+	logrus.Infoln("come 2.2")
 	// write the config to the content store
 	data, err := container.Spec.Marshal()
 	if err != nil {
 		return nil, err
 	}
+	logrus.Infoln("come 2.3")
 	spec := bytes.NewReader(data)
 	specD, err := l.writeContent(ctx, images.MediaTypeContainerd1CheckpointConfig, filepath.Join(image, "spec"), spec)
+	logrus.Infof("spec %v,", spec)
+	logrus.Infof("specD %v, err: %v", specD, err)
+	// Feb 15 08:27:15 ip-172-31-37-119 containerd[27314]: time="2023-02-15T08:27:15.327175467Z" level=info
+	// msg="specD <nil>, err: content sha256:b0b91f3ac627225e1baf15df08b3fb20725c6359ae1ea5a41df14ef397eb3f29: already exists"
+	// 1. first, it should allow the duplicates
+	// 2. it should return the error correctly.
 	if err != nil {
 		return nil, errdefs.ToGRPC(err)
 	}
+	logrus.Infoln("come 3")
 	return &api.CheckpointTaskResponse{
 		Descriptors: []*types.Descriptor{
 			cp,
@@ -683,8 +701,15 @@ func (l *local) writeContent(ctx context.Context, mediaType, ref string, r io.Re
 	if err != nil {
 		return nil, err
 	}
+	// throw such errs: content sha256:b0b91f3ac627225e1baf15df08b3fb20725c6359ae1ea5a41df14ef397eb3f29: already exists
 	if err := writer.Commit(ctx, 0, ""); err != nil {
-		return nil, err
+		logrus.Infof("writeContent error %v, alreadyError %v", err, errdefs.ErrAlreadyExists)
+		logrus.Infof("writeContent mediaType %v", mediaType)
+		logrus.Infof("writeContent Digest %v", writer.Digest())
+		logrus.Infof("writeContent Size %v", size)
+		if !errdefs.IsAlreadyExists(err) {
+			return nil, err
+		}
 	}
 	return &types.Descriptor{
 		MediaType:   mediaType,

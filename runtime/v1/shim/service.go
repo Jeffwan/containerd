@@ -181,6 +181,7 @@ func (s *Service) Create(ctx context.Context, r *shimapi.CreateTaskRequest) (_ *
 	if err != nil {
 		return nil, errdefs.ToGRPC(err)
 	}
+	logrus.Infoln("process create")
 	if err := process.Create(ctx, config); err != nil {
 		return nil, errdefs.ToGRPC(err)
 	}
@@ -200,6 +201,7 @@ func (s *Service) Start(ctx context.Context, r *shimapi.StartRequest) (*shimapi.
 	if err != nil {
 		return nil, err
 	}
+	logrus.Infoln("process start")
 	if err := p.Start(ctx); err != nil {
 		return nil, err
 	}

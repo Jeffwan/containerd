@@ -130,6 +130,7 @@ func (w *writer) Commit(ctx context.Context, size int64, expected digest.Digest,
 		if err := os.RemoveAll(w.path); err != nil {
 			log.G(ctx).WithField("ref", w.ref).WithField("path", w.path).Error("failed to remove ingest directory")
 		}
+		// here is the problem.
 		return fmt.Errorf("content %v: %w", dgst, errdefs.ErrAlreadyExists)
 	}
 

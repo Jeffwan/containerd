@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/sirupsen/logrus"
 
 	"github.com/containerd/containerd/containers"
 	"github.com/containerd/containerd/content"
@@ -84,9 +85,7 @@ func WithRestoreRuntime(ctx context.Context, id string, client *Client, checkpoi
 		// restore options if present
 		m, err := GetIndexByMediaType(index, images.MediaTypeContainerd1CheckpointRuntimeOptions)
 		if err != nil {
-			if err != ErrMediaTypeNotFound {
-				return err
-			}
+			return err
 		}
 		var options ptypes.Any
 		if m != nil {
@@ -111,6 +110,7 @@ func WithRestoreRuntime(ctx context.Context, id string, client *Client, checkpoi
 // WithRestoreSpec restores the spec from the checkpoint for the container
 func WithRestoreSpec(ctx context.Context, id string, client *Client, checkpoint Image, index *imagespec.Index) NewContainerOpts {
 	return func(ctx context.Context, client *Client, c *containers.Container) error {
+		logrus.Infoln("coming into restore spec")
 		m, err := GetIndexByMediaType(index, images.MediaTypeContainerd1CheckpointConfig)
 		if err != nil {
 			return err
