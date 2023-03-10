@@ -1415,6 +1415,13 @@ file {
       type_name: ".google.protobuf.Any"
       json_name: "options"
     }
+    field {
+      name: "lazy_pages"
+      number: 11
+      label: LABEL_OPTIONAL
+      type: TYPE_BOOL
+      json_name: "lazyPages"
+    }
   }
   message_type {
     name: "CreateTaskResponse"
