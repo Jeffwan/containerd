@@ -209,6 +209,7 @@ func (l *local) Create(ctx context.Context, r *api.CreateTaskRequest, _ ...grpc.
 		RuntimeOptions: container.Runtime.Options,
 		TaskOptions:    r.Options,
 		SandboxID:      container.SandboxID,
+		LazyPages:      r.LazyPage,
 	}
 	if r.RuntimePath != "" {
 		opts.Runtime = r.RuntimePath
@@ -221,6 +222,9 @@ func (l *local) Create(ctx context.Context, r *api.CreateTaskRequest, _ ...grpc.
 			Options: m.Options,
 		})
 	}
+
+	// TODO: by default it should use v2 after 1.4, 1.5, 1.6. the machine may install older version.
+	log.G(ctx).Infof("Using runtime %q now", container.Runtime.Name)
 	if strings.HasPrefix(container.Runtime.Name, "io.containerd.runtime.v1.") {
 		log.G(ctx).Warn("runtime v1 is deprecated since containerd v1.4, consider using runtime v2")
 	} else if container.Runtime.Name == plugin.RuntimeRuncV1 {

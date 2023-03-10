@@ -42,6 +42,10 @@ var restoreCommand = cli.Command{
 			Name:  "live",
 			Usage: "restore the runtime and memory data from the checkpoint",
 		},
+		cli.BoolFlag{
+			Name:  "lazy-page",
+			Usage: "Restore the checkpoint using lazy page mode",
+		},
 	},
 	Action: func(context *cli.Context) error {
 		id := context.Args().First()
@@ -88,6 +92,13 @@ var restoreCommand = cli.Command{
 		if context.Bool("live") {
 			topts = append(topts, containerd.WithTaskCheckpoint(checkpoint))
 		}
+
+		if context.Bool("lazy-page") {
+			topts = append(topts, containerd.WithTaskLazyPagesLoading(true))
+		}
+
+		// why checkpoint path is not passed into lazy-pages below?
+
 		spec, err := ctr.Spec(ctx)
 		if err != nil {
 			return err

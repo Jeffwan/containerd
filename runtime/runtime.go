@@ -51,6 +51,8 @@ type CreateOpts struct {
 	Runtime string
 	// SandboxID is an optional ID of sandbox this container belongs to
 	SandboxID string
+	// LazyPages is an optional flag of enable memory loading lazily
+	LazyPages bool
 }
 
 // Exit information for a process

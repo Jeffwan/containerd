@@ -147,8 +147,9 @@ type TaskInfo struct {
 	// RootFS is a list of mounts to use as the task's root filesystem
 	RootFS []mount.Mount
 	// Options hold runtime specific settings for task creation
-	Options interface{}
-	runtime string
+	Options   interface{}
+	runtime   string
+	lazyPages bool
 }
 
 // Runtime name for the container

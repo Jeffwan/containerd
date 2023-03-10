@@ -246,6 +246,7 @@ func (r *Runtime) Create(ctx context.Context, id string, opts runtime.CreateOpts
 		Terminal:   opts.IO.Terminal,
 		Checkpoint: opts.Checkpoint,
 		Options:    protobuf.FromAny(opts.TaskOptions),
+		LazyPages:  opts.LazyPages,
 	}
 	for _, m := range opts.Rootfs {
 		sopts.Rootfs = append(sopts.Rootfs, &types.Mount{

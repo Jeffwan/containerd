@@ -80,6 +80,15 @@ func WithTaskCheckpoint(im Image) NewTaskOpts {
 	}
 }
 
+// WithTaskLazyPagesLoading sets the lazy load param for task.
+// TODO: merge with WithTaskCheckpoint, currently we are trying not to introduce too many refactors but use new methods instead.
+func WithTaskLazyPagesLoading(lazyPages bool) NewTaskOpts {
+	return func(ctx context.Context, client *Client, ti *TaskInfo) error {
+		ti.lazyPages = lazyPages
+		return nil
+	}
+}
+
 func decodeIndex(ctx context.Context, store content.Provider, desc imagespec.Descriptor) (*imagespec.Index, error) {
 	var index imagespec.Index
 	p, err := content.ReadBlob(ctx, store, desc)

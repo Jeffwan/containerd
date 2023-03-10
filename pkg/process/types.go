@@ -41,6 +41,7 @@ type CreateConfig struct {
 	Checkpoint       string
 	ParentCheckpoint string
 	Options          *google_protobuf.Any
+	LazyPages        bool
 }
 
 // ExecConfig holds exec creation configuration

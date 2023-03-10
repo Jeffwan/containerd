@@ -150,6 +150,7 @@ func (s *Service) Create(ctx context.Context, r *shimapi.CreateTaskRequest) (_ *
 		Checkpoint:       r.Checkpoint,
 		ParentCheckpoint: r.ParentCheckpoint,
 		Options:          r.Options,
+		LazyPages:        r.LazyPages,
 	}
 	var mounts []mount.Mount
 	for _, pm := range pmounts {
