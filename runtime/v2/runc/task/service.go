@@ -138,7 +138,10 @@ func (s *service) Create(ctx context.Context, r *taskAPI.CreateTaskRequest) (_ *
 		},
 		Checkpoint: r.Checkpoint,
 		Pid:        uint32(container.Pid()),
+		LazyPages:  r.LazyPages,
 	})
+
+	logrus.Printf("containerd runtime/v2/runc/task/service.go, lazyPages=%v\n", r.LazyPages)
 
 	return &taskAPI.CreateTaskResponse{
 		Pid: uint32(container.Pid()),

@@ -197,7 +197,7 @@ func (p *Init) createCheckpointedState(r *CreateConfig, pidFile *pidFile) error 
 		NoSubreaper: true,
 	}
 
-	logrus.Infof("Already set lazyPages to %v", r.LazyPages)
+	logrus.Infof("createCheckpointedState set lazyPages to %v", r.LazyPages)
 	if r.LazyPages {
 		opts.LazyPages = r.LazyPages
 	}

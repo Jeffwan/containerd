@@ -89,6 +89,7 @@ func NewContainer(ctx context.Context, platform stdio.Platform, r *task.CreateTa
 		Checkpoint:       r.Checkpoint,
 		ParentCheckpoint: r.ParentCheckpoint,
 		Options:          r.Options,
+		LazyPages:        r.LazyPages,
 	}
 
 	if err := WriteOptions(r.Bundle, opts); err != nil {
