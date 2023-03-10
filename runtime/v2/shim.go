@@ -443,6 +443,7 @@ func (s *shimTask) Create(ctx context.Context, opts runtime.CreateOpts) (runtime
 		Terminal:   opts.IO.Terminal,
 		Checkpoint: opts.Checkpoint,
 		Options:    protobuf.FromAny(topts),
+		LazyPages:  opts.LazyPages,
 	}
 	for _, m := range opts.Rootfs {
 		request.Rootfs = append(request.Rootfs, &types.Mount{
