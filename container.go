@@ -296,6 +296,8 @@ func (c *container) NewTask(ctx context.Context, ioCreate cio.Creator, opts ...N
 	}
 	if info.Checkpoint != nil {
 		request.Checkpoint = info.Checkpoint
+		// only assign it when checkpoint is there. only part makes sense.
+		request.LazyPage = info.lazyPages
 	}
 	response, err := c.client.TaskService().Create(ctx, request)
 	if err != nil {

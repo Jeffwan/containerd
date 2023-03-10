@@ -78,6 +78,7 @@ func NewTask(ctx gocontext.Context, client *containerd.Client, container contain
 			return nil, err
 		}
 		opts = append(opts, containerd.WithTaskCheckpoint(im))
+		// no need to append --lazy-pages here. Already handled by upperlayer.
 	}
 	var ioCreator cio.Creator
 	if con != nil {

@@ -22,6 +22,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"path/filepath"
@@ -194,6 +195,11 @@ func (p *Init) createCheckpointedState(r *CreateConfig, pidFile *pidFile) error 
 		NoPivot:     p.NoPivotRoot,
 		Detach:      true,
 		NoSubreaper: true,
+	}
+
+	logrus.Infof("Already set lazyPages to %v", r.LazyPages)
+	if r.LazyPages {
+		opts.LazyPages = r.LazyPages
 	}
 
 	if p.io != nil {
