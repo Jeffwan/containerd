@@ -32,6 +32,8 @@ func (m *TaskCreate) Field(fieldpath []string) (string, bool) {
 		return m.IO.Field(fieldpath[1:])
 	case "checkpoint":
 		return string(m.Checkpoint), len(m.Checkpoint) > 0
+	case "lazy_pages":
+		return fmt.Sprint(m.LazyPages), true
 	}
 	return "", false
 }

@@ -577,6 +577,13 @@ file {
       type: TYPE_UINT32
       json_name: "pid"
     }
+    field {
+      name: "lazy_pages"
+      number: 7
+      label: LABEL_OPTIONAL
+      type: TYPE_BOOL
+      json_name: "lazyPages"
+    }
   }
   message_type {
     name: "TaskStart"
