@@ -32,6 +32,7 @@ message TaskCreate {
 	TaskIO io = 4;
 	string checkpoint = 5;
 	uint32 pid = 6;
+	bool lazy_pages = 7;
 }
 
 message TaskStart {
